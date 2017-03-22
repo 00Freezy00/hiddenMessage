@@ -3,7 +3,8 @@ Yun Hao Jack Zhang 26956047
 Build file:
 make
 
-hide paramater: input filename, output filename
+hide paramater: input PPM filename, output PPM filename
+unhide parmater: input PPM filename
 
 Clean file:
 make clean

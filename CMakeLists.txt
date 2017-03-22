@@ -4,8 +4,9 @@ project(hiddenMessage)
 set(CMAKE_C_STANDARD 99)
 
 set(SOURCE_FILES
-        main.c)
+        hide.c)
 
-add_executable(main.c ${SOURCE_FILES} )
+add_executable(hide.c ${SOURCE_FILES} )
 
-target_link_libraries(main.c m)
+
+target_link_libraries(hide.c m)
