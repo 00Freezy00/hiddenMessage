@@ -1,0 +1,11 @@
+Yun Hao Jack Zhang 26956047
+
+Build file:
+make
+
+hide paramater: input filename, output filename
+
+Clean file:
+make clean
+
+BMP format is not supported, PPM is supported.

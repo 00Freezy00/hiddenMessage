@@ -2,11 +2,13 @@
 // Created by jack on 18/03/17.
 //
 
-//#include "main.c"
-
 #include "hiddenMessage.h"
 
 int append(char *aString, size_t stringLen, char aChar) {
+    /*
+     * Safely append the char into char array, return 1 if char array is full
+     *
+     */
     if (strlen(aString) + 1 >= stringLen) {
         return 1;
     }
@@ -17,11 +19,16 @@ int append(char *aString, size_t stringLen, char aChar) {
 }
 
 char *revealMessage(FILE *in, int width, int height) {
+    /*
+     * reveals the message inside of the image
+     * return: the message
+     */
     int aChar;
-    int i = 0;
     char messageBits[8];
-    int maxMessage = sizeof(char) * (int) ((floor((width * height * 3) / 8)) + (width * height * 3) % 8 + 1);
+    messageBits[0] = '\0';
+    size_t maxMessage = sizeof(char) * (size_t) ((floor((width * height * 3) / 8)) + (width * height * 3) % 8 + 1);
     char *message = malloc(maxMessage);
+    message[0] = '\0';
     while (1) {
         aChar = fgetc(in);
         if (feof(in)) {
@@ -43,14 +50,13 @@ char *revealMessage(FILE *in, int width, int height) {
                 free(message);
                 exit(-1);
         }
-        i = i + 1;
-        if (i == 8) {
-            i = 0;
+        if (strlen(messageBits) == 8) {//concat binary into a char
             aChar = (char) strtol(messageBits, 0, 2);
             messageBits[0] = '\0';
-            if (append(message, maxMessage+1, c) == 1) {
+            if (append(message, maxMessage, aChar) == 1) {
                 fprintf(stderr, "String has been exceeded");
                 fclose(in);
+                free(message);
                 exit(-1);
             }
             if (aChar == '\0') {
@@ -86,18 +92,7 @@ int main(int argc, char *argv[]) {
     skipComment(inputFile);
     checkColorChannel(inputFile);
 
-    long fileBinaryPos = ftell(inputFile);
-    fclose(inputFile);
-
-    inputFile = fopen(argv[1], "rb");
-    if (inputFile == NULL) {
-        fprintf(stderr, "%s:error:Cannot open %s ", argv[0], argv[1]);
-        perror(0);
-        exit(-1);
-    }
-
-    fseek(inputFile, fileBinaryPos - 1, SEEK_CUR);
-
+    fseek(inputFile, -1, SEEK_CUR);
 
     char *message = revealMessage(inputFile, dimension[0], dimension[1]);
 
