@@ -1,6 +1,6 @@
 all:
-	gcc hide.c -lm -o hide
-	gcc unhide.c -lm -o unhide
+	gcc hide.c supportLib.c -lm -o hide
+	gcc unhide.c supportLib.c -lm -o unhide
 clean:
 	rm hide
 	rm unhide

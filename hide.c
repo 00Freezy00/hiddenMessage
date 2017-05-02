@@ -1,12 +1,14 @@
+//
+//Created by Jack 26956047
+//Hide the message
 #include "hiddenMessage.h"
-
-
+/**
+ * hide a bit in a byte
+ * @param a char in integer form
+ * @param the bit that are going to hide in the char
+ * @return  char with a bit hiiden in it
+ */
 int hideABit(int charInt, char bit) {
-    /*
-     * hide a bit in a byte
-     * charInt: a char
-     * bit: 1 or 0
-     */
     switch (bit) {
         case '0':
             charInt &= ~(1 << 0);
@@ -20,13 +22,14 @@ int hideABit(int charInt, char bit) {
     }
 }
 
+/**
+ * Check the input message is within the limit of the image
+ * @param in a file pointer, the input PPM file
+ * @param width: dimension from the image header
+ * @param height: dimension from the image header
+ * @return hidden message in a binary string
+ */
 char *checkMessageSize(FILE *in, int width, int height) {
-    /*
-     * Check the input message is within the limit of the image
-     * in: a file pointer, the input PPM file
-     * width height: dimension from the image header
-     * return hidden message in a binary string
-     */
     //getting hidden hiddenMessage
     int maxMessage = ((int) (floor((width * height * 3) / 8)) + (width * height * 3) % 8);// grab one more byte to see if user input exceeds the spec
     char * hiddenMessage = malloc(sizeof(char) * maxMessage + 1);//decimal
@@ -46,15 +49,14 @@ char *checkMessageSize(FILE *in, int width, int height) {
 
     return hiddenMessage;// convert it to binary string
 }
-
+/**
+ * hide message inside of the text
+ * @param out: a file pointer, output file
+ * @param in: a file pointer, input file
+ * @param hiddenMessageBin: hidden message in binary form
+ * @return the size of the image binary data
+ */
 int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin) {
-    /*
-     * hide message inside of the text
-     * out: file pointer, output file
-     * in: file pointer, input file
-     * hiddenMessageBin: hidden message in binary form
-     * return the size of the image binary data
-     */
     //Assuming input validation has passed
     int aChar;
     for (int i = 0; i < strlen(hiddenMessageBin); i = i + 1) {
@@ -72,7 +74,11 @@ int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin) {
         fwrite(&aChar, 1, sizeof(unsigned char), out);
     }
 }
-
+/**
+ * Turn input string into binary format
+ * @param aString: input string
+ * @return input string in binary format
+ */
 char *stringToBinary(char *aString) {
     if (aString == NULL) return 0; /* no input string */
     char *binary = malloc(
