@@ -3,6 +3,9 @@
 //Hide the message
 #include "hiddenMessage.h"
 
+
+
+
 /**
  * hide a bit in a byte
  * @param a char in integer form
@@ -32,33 +35,36 @@ int hideABit(int charInt, char bit) {
  */
 char *checkMessageSize(FILE *in, int width, int height) {
     //getting hidden hiddenMessage
-    int maxMessage = ((int) (floor((width * height * 3) / 8)) + (width * height * 3) % 8);// grab one more byte to see if user input exceeds the spec
-    char * hiddenMessage = malloc(sizeof(char) * maxMessage + 1);//decimal
+    int maxMessage = ((int) (floor((width * height * 3) / 8)) + (width * height * 3) % 8);
+    char * hiddenMessage = malloc(sizeof(char) * maxMessage);
+    if (hiddenMessage == NULL){
+        fprintf(stderr, "Memory Error: Cannot allocate memory space\n");
+        fclose(in);
+        free(hiddenMessage);
+        exit(-1);
+    }
+    hiddenMessage[0] = '\0';
     printf("Please enter a hiddenMessage to be hidden inside of the image: \n");
 
-    //Dynamically taking scanf() input
-    char scanfFormat[32]; //This size should be sufficient enough for a pattern
-    snprintf(scanfFormat, sizeof(scanfFormat),"%%%us",maxMessage);
-    hiddenMessage[0] ='\0';
-    if (scanf(scanfFormat, hiddenMessage) != 1){
-        fprintf(stderr, "String is empty??\n");
+
+    int aChar = 0;
+    while (aChar != EOF){
+        aChar = fgetc(stdin);
+        if (append(hiddenMessage,(size_t)maxMessage,(char)aChar) != 0){
+            fprintf(stderr, "Input error: The message is too large for this image\n");
+            fclose(in);
+            free(hiddenMessage);
+            exit(-1);
+        }
+    }
+
+    if (strlen(hiddenMessage) == 0){
+        fprintf(stderr, "Input error: The message is empty");
         fclose(in);
         free(hiddenMessage);
         exit(-1);
     }
 
-    //do {
-        //fgets(hiddenMessage, maxMessage + 1, stdin);
-        //hiddenMessage[strcspn(hiddenMessage, "\n")] = '\0';
-    //} while (strcmp(hiddenMessage, "") == 0);
-
-    //Check if the hiddenMessage can fit in the image
-    if (strlen(hiddenMessage) > maxMessage - 1) {
-        fprintf(stderr, "Size error: Hidden message is too large for this image\n");
-        fclose(in);
-        free(hiddenMessage);
-        exit(-1);
-    }
 
     return hiddenMessage;// convert it to binary string
 }
@@ -107,7 +113,6 @@ char *stringToBinary(char *aString) {
             }
         }
     }
-    strcat(binary, "11111111");
     return binary;
 }
 

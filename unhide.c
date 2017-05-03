@@ -3,22 +3,7 @@
 // unhide the message
 //
 #include "hiddenMessage.h"
-/**
- * Safely append the char into char array, return 1 if char array is full
- * @param aString: input string
- * @param stringLen: the len of input string
- * @param aChar: the char that are going to be appended
- * @return successful state
- */
-int append(char *aString, size_t stringLen, char aChar) {
-    if (strlen(aString) + 1 >= stringLen) {
-        return 1;
-    }
-    int len = (int) strlen(aString);
-    aString[len] = aChar;
-    aString[len + 1] = '\0';
-    return 0;
-}
+
 /**
  * reveals the message inside of the image
  * @param in : input file
