@@ -31,7 +31,7 @@ void checkImageFormat(FILE *in, char *filename) {
     char imageFormat[4];
     fscanf(in, "%3s ", imageFormat); //Space consumes \n
     if ((strcmp(imageFormat, "P6") != 0)) {
-        fprintf(stderr, "Format Error: %s has to be in P6 ppm format", filename);
+        fprintf(stderr, "Format Error: %s has to be in P6 ppm format\n", filename);
         fclose(in);
         exit(-1);
     }
@@ -51,7 +51,7 @@ int *checkDimension(FILE *in) {
 
 
     if (width <= 0 || height <= 0) {
-        fprintf(stderr, "Format error: height and width in the image header has to be an positive integer");
+        fprintf(stderr, "Format error: height and width in the image header has to be an positive integer\n");
         fclose(in);
         exit(-1);
     }
@@ -78,7 +78,7 @@ void checkColorChannel(FILE *in) {
 
     }
     if (colorSpec != 255) {
-        fprintf(stderr, "Format Error: maximum value for a color channel needs to be 255");
+        fprintf(stderr, "Format Error: maximum value for a color channel needs to be 255\n");
         fclose(in);
         exit(-1);
     }

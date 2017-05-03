@@ -2,11 +2,12 @@
 //Created by Jack 26956047
 //Hide the message
 #include "hiddenMessage.h"
+
 /**
  * hide a bit in a byte
  * @param a char in integer form
  * @param the bit that are going to hide in the char
- * @return  char with a bit hiiden in it
+ * @return  char with a bit hidden in it
  */
 int hideABit(int charInt, char bit) {
     switch (bit) {
@@ -33,15 +34,27 @@ char *checkMessageSize(FILE *in, int width, int height) {
     //getting hidden hiddenMessage
     int maxMessage = ((int) (floor((width * height * 3) / 8)) + (width * height * 3) % 8);// grab one more byte to see if user input exceeds the spec
     char * hiddenMessage = malloc(sizeof(char) * maxMessage + 1);//decimal
-    do {
-        printf("Please enter a hiddenMessage to be hidden inside of the image: ");
-        fgets(hiddenMessage, maxMessage + 1, stdin);
-        hiddenMessage[strcspn(hiddenMessage, "\n")] = '\0';
-    } while (strcmp(hiddenMessage, "") == 0);
+    printf("Please enter a hiddenMessage to be hidden inside of the image: \n");
+
+    //Dynamically taking scanf() input
+    char scanfFormat[32]; //This size should be sufficient enough for a pattern
+    snprintf(scanfFormat, sizeof(scanfFormat),"%%%us",maxMessage);
+    hiddenMessage[0] ='\0';
+    if (scanf(scanfFormat, hiddenMessage) != 1){
+        fprintf(stderr, "String is empty??\n");
+        fclose(in);
+        free(hiddenMessage);
+        exit(-1);
+    }
+
+    //do {
+        //fgets(hiddenMessage, maxMessage + 1, stdin);
+        //hiddenMessage[strcspn(hiddenMessage, "\n")] = '\0';
+    //} while (strcmp(hiddenMessage, "") == 0);
 
     //Check if the hiddenMessage can fit in the image
     if (strlen(hiddenMessage) > maxMessage - 1) {
-        fprintf(stderr, "Size error: Hidden message is too large for this image");
+        fprintf(stderr, "Size error: Hidden message is too large for this image\n");
         fclose(in);
         free(hiddenMessage);
         exit(-1);
@@ -94,7 +107,7 @@ char *stringToBinary(char *aString) {
             }
         }
     }
-    strcat(binary, "00000000");
+    strcat(binary, "11111111");
     return binary;
 }
 
@@ -102,7 +115,7 @@ int main(int argc, char *argv[]) {
 
     //Not enough or too many arguments
     if (argc != 3) {
-        fprintf(stderr, "Usage: hide 'Input Filename' 'Output Filename'");
+        fprintf(stderr, "Usage: hide 'Input Filename' 'Output Filename'\n");
         exit(-1);
     }
 
@@ -111,7 +124,7 @@ int main(int argc, char *argv[]) {
 
     //File doesnt exist
     if (inputFile == NULL) {
-        fprintf(stderr, "%s:error:Cannot open %s ", argv[0], argv[1]);
+        fprintf(stderr, "%s:error:Cannot open %s \n", argv[0], argv[1]);
         perror(0);
         exit(-1);
     }
@@ -133,7 +146,7 @@ int main(int argc, char *argv[]) {
     rewind(inputFile);
     //read in output
     FILE *outputFile;
-    outputFile = fopen(argv[2], "wb");
+    outputFile = fopen(argv[2], "w");
 
     //Writing header info to the output file
     char headerInfo[fileBinaryPos];
@@ -142,13 +155,12 @@ int main(int argc, char *argv[]) {
 
     //write image binary to the output file and checks if the image's binary is matching up with the header
     if (dimension[0]*dimension[1]*3 != hideTheMessage(outputFile, inputFile, hiddenMessageBin)){
-        fprintf(stderr,"Error: image's binary data is not matching up with the header");
+        fprintf(stderr,"Error: image's binary data is not matching up with the header\n");
         free(hiddenMessageBin);
         fclose(inputFile);
         fclose(outputFile);
-        remove(argv[2]);
+        remove(argv[2]); //Remove the output file
         exit(-1);
-
     };
     free(hiddenMessageBin);
 

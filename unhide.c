@@ -36,7 +36,7 @@ char *revealMessage(FILE *in, int width, int height) {
     while (1) {
         aChar = fgetc(in);
         if (feof(in)) {
-            fprintf(stderr, "Is the message even in the image??");
+            fprintf(stderr, "Is the message even in the image??\n");
             free(message);
             fclose(in);
             exit(-1);
@@ -49,23 +49,23 @@ char *revealMessage(FILE *in, int width, int height) {
                 strcat(messageBits, "1");
                 break;
             default:
-                fprintf(stderr, "Is this a bit?");
+                fprintf(stderr, "Is this a bit?\n");
                 fclose(in);
                 free(message);
                 exit(-1);
         }
         if (strlen(messageBits) == 8) {//concat binary into a char
             aChar = (char) strtol(messageBits, 0, 2);
-            messageBits[0] = '\0';
+            if (aChar == EOF) {
+                return message;
+            }
             if (append(message, maxMessage, aChar) == 1) {
-                fprintf(stderr, "String has been exceeded");
+                fprintf(stderr, "String has been exceeded\n");
                 fclose(in);
                 free(message);
                 exit(-1);
             }
-            if (aChar == '\0') {
-                return message;
-            }
+            messageBits[0] = '\0'; //Reset messageBits array
         }
     }
 }
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 
     //Not enough or too many arguments
     if (argc != 2) {
-        fprintf(stderr, "Usage: hide 'filename'");
+        fprintf(stderr, "Usage: hide 'filename'\n");
         exit(-1);
     }
 
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 
     //file doesnt exist
     if (inputFile == NULL) {
-        fprintf(stderr, "%s:error:Cannot open %s ", argv[0], argv[1]);
+        fprintf(stderr, "%s:error:Cannot open %s \n", argv[0], argv[1]);
         perror(0);
         exit(-1);
     }
