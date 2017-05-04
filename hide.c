@@ -92,27 +92,25 @@ int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin) {
     }
 }
 
-int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin, int inputMaxMessage,int startPoint) {
+int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin,int inputFileMax,int offset) {
     //Assuming input validation has passed
+    //int fileBinaryCheck = inputFileMax;
     int aChar;
-    int i = startPoint;
-    int j = 0;
-    while (i < strlen(hiddenMessageBin)){
-
-        aChar = fgetc(in);
-        aChar = hideABit(aChar, hiddenMessageBin[i]);
-        fwrite(&aChar, 1, sizeof(unsigned char), out);
-        ++i;
-        ++j;
-        if (j > inputMaxMessage*8){
-            return i;
-        }
-    }
-
-    while (1) {
+    while (offset < strlen(hiddenMessageBin)){
         aChar = fgetc(in);
         if (feof(in)) {
-            return i;
+            return offset;
+        }
+        aChar = hideABit(aChar, hiddenMessageBin[offset]);
+        fwrite(&aChar, 1, sizeof(unsigned char), out);
+        ++offset;
+        //++fileBinaryCheck;
+    }
+
+    while (1) {//If the hiddenMessageBin has embed
+        aChar = fgetc(in);
+        if (feof(in)) {
+            return offset;
         }
         fwrite(&aChar, 1, sizeof(unsigned char), out);
     }
@@ -139,8 +137,9 @@ char *stringToBinary(char *aString) {
                 strcat(binary, "0");
             }
         }
+
     }
-    strcat(binary, "11111111");
+    //strcat(binary,"11111111");
     return binary;
 }
 /**
@@ -310,27 +309,27 @@ int main(int argc, char *argv[]) {
             }
         }//Images header seems fine
 
-        //char *hiddenMessage = malloc(sizeof(char) * maxMessage+1);
-        char hiddenMessage[64] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        char *hiddenMessage = malloc(sizeof(char) * maxMessage);
+        //char hiddenMessage[64] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         if (hiddenMessage == NULL) {
             fprintf(stderr, "Memory Error: Cannot allocate memory space\n");
             closePerviousFile(inputFile,numberOfFiles);
             exit(-1);
         }
-        //hiddenMessage[0] = '\0';
+        hiddenMessage[0] = '\0';
         printf("Please enter a hiddenMessage to be hidden inside of the image: \n");
 
         //Taking input
-//        int aChar = 0;
-//        while (aChar != EOF){
-//            aChar = fgetc(stdin);
-//            if (append(hiddenMessage,(size_t)maxMessage,(char)aChar) != 0){
-//                fprintf(stderr, "Input error: The message is too large for this image\n");
-//                closePerviousFile(inputFile,numberOfFiles);
-//                free(hiddenMessage);
-//                exit(-1);
-//            }
-//        }
+        int aChar = 0;
+        while (aChar != EOF){
+            aChar = fgetc(stdin);
+            if (append(hiddenMessage,(size_t)maxMessage,(char)aChar) != 0){
+                fprintf(stderr, "Input error: The message is too large for this image\n");
+                closePerviousFile(inputFile,numberOfFiles);
+                free(hiddenMessage);
+                exit(-1);
+            }
+        }
 
         if (strlen(hiddenMessage) == 0){
             fprintf(stderr, "Input error: The message is empty");
@@ -346,14 +345,15 @@ int main(int argc, char *argv[]) {
             closePerviousFile(inputFile,numberOfFiles);
             exit(-1);
         }
-        //free(hiddenMessage);
+        free(hiddenMessage);
 
 
         FILE *outputFile[atoi(argv[2])-1];
         char outputFileName[strlen(argv[4])+9];//Size should be length of the basename + 4 (-000) + 4 (.ppm) + 1 for the \0
-        int remainingMessage = (int)strlen(hiddenMessageBin);//Remaining message should be binary message
+        //int remainingMessage = (int)strlen(hiddenMessageBin);//Remaining message should be binary message
         char *outputFileNameList[atoi(argv[2])-1];
         int startPoint = 0;
+
         for (int i=0; i < numberOfFiles;++i){
 
             //======================
@@ -384,12 +384,11 @@ int main(int argc, char *argv[]) {
 
             //write image binary to the output file and checks if the image's binary is matching up with the header
             startPoint = hideTheMessageM(outputFile[i], inputFile[i], hiddenMessageBin,maxMessageList[i],startPoint);
-            startPoint = startPoint - 1;
-            remainingMessage = remainingMessage - maxMessageList[i]*8;
-            fclose(outputFile[i]);
             if (startPoint == strlen(hiddenMessageBin)){
                 break;
             }
+            fclose(outputFile[i]);
+
         }
         if (startPoint != strlen(hiddenMessageBin)) {
                 fprintf(stderr, "Error: image's binary data is not matching up with the header\n");
@@ -402,8 +401,6 @@ int main(int argc, char *argv[]) {
             };
         free(hiddenMessageBin);
         closePerviousFile(inputFile,numberOfFiles);
-
-
 
     }
 

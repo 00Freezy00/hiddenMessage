@@ -75,7 +75,9 @@ int main(int argc, char *argv[]) {
 
     //Checking the header
     skipComment(inputFile);
-    checkImageFormat(inputFile, argv[2]);
+    if (checkImageFormat(inputFile) == 1){
+        exit(-1);
+    }
     skipComment(inputFile);
     int *dimension = checkDimension(inputFile);
     skipComment(inputFile);
