@@ -24,17 +24,18 @@ void skipComment(FILE *imageFile) {
 
 /**
  * Checks the magic number, prints out error if it needs to.
- * @param in: a file pointer, the input PPM file
+ * @param in: a file pointer
  * @param filename: input filename
  */
-void checkImageFormat(FILE *in, char *filename) {
+int checkImageFormat(FILE *in) {
     char imageFormat[4];
     fscanf(in, "%3s ", imageFormat); //Space consumes \n
     if ((strcmp(imageFormat, "P6") != 0)) {
-        fprintf(stderr, "Format Error: %s has to be in P6 ppm format\n", filename);
+        fprintf(stderr, "Format Error: Image has to be in P6 ppm format\n");
         fclose(in);
-        exit(-1);
+        return 1;
     }
+    return 0;
 }
 
 /**
@@ -48,16 +49,18 @@ int *checkDimension(FILE *in) {
     skipComment(in);
     fscanf(in,"%d",&height);
     //Check height and width is a positive integer
-
-
+    static int dimension[2];
     if (width <= 0 || height <= 0) {
         fprintf(stderr, "Format error: height and width in the image header has to be an positive integer\n");
         fclose(in);
-        exit(-1);
+        dimension[0] = width;
+        dimension[1] = height;
+        dimension[2] = 1;
+        return dimension;
     }
-    static int dimension[2];
     dimension[0] = width;
     dimension[1] = height;
+    dimension[2] = 0;
     return dimension;
 }
 
@@ -66,7 +69,7 @@ int *checkDimension(FILE *in) {
  *  Checking maximum value for a color channel
  * @param in: a file pointer, the input PPM file
  */
-void checkColorChannel(FILE *in) {
+int checkColorChannel(FILE *in) {
     char colorSpecStr[4];
     fscanf(in, "%4s ", colorSpecStr);
     int colorSpec;
@@ -74,14 +77,15 @@ void checkColorChannel(FILE *in) {
     if ((colorSpec = atoi(colorSpecStr)) == 0) {
         fprintf(stderr, "Format Error: %s is not a integer", colorSpecStr);
         fclose(in);
-        exit(-1);
+        return 1;
 
     }
     if (colorSpec != 255) {
         fprintf(stderr, "Format Error: maximum value for a color channel needs to be 255\n");
         fclose(in);
-        exit(-1);
+        return 1;
     }
+    return 0;
 }
 
 /**
@@ -92,7 +96,7 @@ void checkColorChannel(FILE *in) {
  * @return successful state
  */
 int append(char *aString, size_t stringLen, char aChar) {
-    if (strlen(aString) + 1 >= stringLen) {
+    if (strlen(aString) + 1 > stringLen) {
         return 1;
     }
     int len = (int) strlen(aString);
