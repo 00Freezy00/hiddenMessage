@@ -78,6 +78,9 @@ int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin) {
     int aChar;
     for (int i = 0; i < strlen(hiddenMessageBin); i = i + 1) {
         aChar = fgetc(in);
+        if (feof(in)) {
+            return i;
+        }
         aChar = hideABit(aChar, hiddenMessageBin[i]);
         fwrite(&aChar, 1, sizeof(unsigned char), out);
     }
@@ -85,16 +88,15 @@ int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin) {
     while (1) {
         aChar = fgetc(in);
         if (feof(in)) {
-            return i;
+            return i+1;
         }
         i = i + 1;
         fwrite(&aChar, 1, sizeof(unsigned char), out);
     }
 }
 
-int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin,int inputFileMax,int offset) {
+int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin,int offset) {
     //Assuming input validation has passed
-    //int fileBinaryCheck = inputFileMax;
     int aChar;
     while (offset < strlen(hiddenMessageBin)){
         aChar = fgetc(in);
@@ -104,7 +106,6 @@ int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin,int inputFileMax
         aChar = hideABit(aChar, hiddenMessageBin[offset]);
         fwrite(&aChar, 1, sizeof(unsigned char), out);
         ++offset;
-        //++fileBinaryCheck;
     }
 
     while (1) {//If the hiddenMessageBin has embed
@@ -160,7 +161,7 @@ bool numbers_only(const char *s)
  *
  * @param argc
  * @param argv
- * @return mode 0 normal 1 multiple file 2 parallel 33 before-after
+ * @return mode 0 normal 1 multiple file 2 parallel 3 before-after
  */
 int inputValidation(int argc, char *argv[]){
     if (argc < 2){
@@ -175,10 +176,17 @@ int inputValidation(int argc, char *argv[]){
         }
         fprintf(stderr, "-m Usage: hide -m number-of-files basename output-base-name'\n");
         exit(-1);
+    }else if (strcmp(argv[1],"-p") == 0){
+        //Do something
+    }else if (strcmp(argv[1],"-s") == 0){
+        //Do something
     }
 
     if (argc == 3){
         return 0;
+    }else{
+        fprintf(stderr, "See -help for more info'\n");
+        exit(-1);
     }
 }
 /**
@@ -200,7 +208,7 @@ int main(int argc, char *argv[]) {
 
     //====================
     //Input argument validation
-    int mode = -1;
+    int mode = 0;
     mode = inputValidation(argc, argv);
     //=====================
 
@@ -265,7 +273,7 @@ int main(int argc, char *argv[]) {
         fclose(outputFile);
 
         //=====================
-    } else if(mode == 1){
+    }else if(mode == 1){
 
         int numberOfFiles = atoi(argv[2]);
         FILE *inputFile[atoi(argv[2])-1];
@@ -283,8 +291,8 @@ int main(int argc, char *argv[]) {
                 exit(-1);
             }
         }//All of the file has been opened
+
         int maxMessage = 0;
-        int maxMessageList[numberOfFiles-1];
         for (int i=0; i < numberOfFiles;++i){//Header validation
 
             skipComment(inputFile[i]);
@@ -300,7 +308,6 @@ int main(int argc, char *argv[]) {
                 closePerviousFile(inputFile,i);//Close the previous one, not include the current one, because it has been closed by checkDimension
                 exit(-1);
             }
-            maxMessageList[i] = (int) (floor((dimension[0] * dimension[1] * 3) / 8) + (dimension[0] * dimension[1] * 3) % 8);
             maxMessage += (int) (floor((dimension[0] * dimension[1] * 3) / 8) + (dimension[0] * dimension[1] * 3) % 8);
             skipComment(inputFile[i]);
             if (checkColorChannel(inputFile[i])==1){//Color channel is wrong
@@ -310,7 +317,6 @@ int main(int argc, char *argv[]) {
         }//Images header seems fine
 
         char *hiddenMessage = malloc(sizeof(char) * maxMessage);
-        //char hiddenMessage[64] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         if (hiddenMessage == NULL) {
             fprintf(stderr, "Memory Error: Cannot allocate memory space\n");
             closePerviousFile(inputFile,numberOfFiles);
@@ -319,7 +325,7 @@ int main(int argc, char *argv[]) {
         hiddenMessage[0] = '\0';
         printf("Please enter a hiddenMessage to be hidden inside of the image: \n");
 
-        //Taking input
+        //Taking the input
         int aChar = 0;
         while (aChar != EOF){
             aChar = fgetc(stdin);
@@ -349,9 +355,7 @@ int main(int argc, char *argv[]) {
 
 
         FILE *outputFile[atoi(argv[2])-1];
-        char outputFileName[strlen(argv[4])+9];//Size should be length of the basename + 4 (-000) + 4 (.ppm) + 1 for the \0
-        //int remainingMessage = (int)strlen(hiddenMessageBin);//Remaining message should be binary message
-        char *outputFileNameList[atoi(argv[2])-1];
+        char outputFileNameList[atoi(argv[2])-1][strlen(argv[4])+9];
         int startPoint = 0;
 
         for (int i=0; i < numberOfFiles;++i){
@@ -362,13 +366,12 @@ int main(int argc, char *argv[]) {
             //=======================
             rewind(inputFile[i]);
             //read in output
-
-            snprintf(outputFileName,strlen(argv[4])+9,"%s-%03d.%s",argv[4],i,"ppm");//Format string to basename-xxx.ppm
-            outputFileNameList[i] = outputFileName;
-            outputFile[i] = fopen(outputFileName, "w");
+            outputFileNameList[i][0] = '\0';
+            snprintf(outputFileNameList[i],strlen(argv[4])+9,"%s-%03d.%s",argv[4],i,"ppm");//Format string to basename-xxx.ppm
+            outputFile[i] = fopen(outputFileNameList[i], "w");
             //File doesnt exist
             if (outputFile[i] == NULL) {
-                fprintf(stderr, "%s:error:Cannot write %s \n", argv[0], outputFileName);
+                fprintf(stderr, "%s:error:Cannot write %s \n", argv[0], outputFileNameList[i]);
                 closePerviousFile(inputFile,numberOfFiles);
                 closePerviousFile(outputFile,i);
                 perror(0);
@@ -383,7 +386,7 @@ int main(int argc, char *argv[]) {
             free(headerInfo);
 
             //write image binary to the output file and checks if the image's binary is matching up with the header
-            startPoint = hideTheMessageM(outputFile[i], inputFile[i], hiddenMessageBin,maxMessageList[i],startPoint);
+            startPoint = hideTheMessageM(outputFile[i], inputFile[i], hiddenMessageBin,startPoint);
             if (startPoint == strlen(hiddenMessageBin)){
                 break;
             }

@@ -13,16 +13,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="957d84f4-4621-477e-b60a-97f1074f7c48" name="Default" comment="Implemented task 1 hide&#10;need to do unhide">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sample.ppm.bak" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample.ppm" afterPath="$PROJECT_DIR$/sample.ppm" />
+    <list default="true" id="957d84f4-4621-477e-b60a-97f1074f7c48" name="Default" comment="Finished implement task 1&#10;TODO: Need to do code optimisation">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unhide" afterPath="$PROJECT_DIR$/unhide" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hide.c" afterPath="$PROJECT_DIR$/hide.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/secret" afterPath="$PROJECT_DIR$/secret" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unhide.c" afterPath="$PROJECT_DIR$/unhide.c" />
     </list>
+    <list id="9f9e8310-c578-44f7-beb4-08e87a54b637" name="Rejected commit: Default" comment="Finished implement task 1&#10;TODO: Need to do code optimisation" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -57,13 +54,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hide.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="hide.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hide.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="94" column="68" lean-forward="false" selection-start-line="94" selection-start-column="68" selection-end-line="94" selection-end-column="68" />
+            <state relative-caret-position="810">
+              <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
               <folding>
                 <element signature="e#49#75#0" expanded="true" />
+                <element signature="e#117#583#0" expanded="false" />
+                <element signature="e#585#1913#0" expanded="false" />
+                <element signature="e#2758#3369#0" expanded="false" />
+                <element signature="e#3370#4167#0" expanded="false" />
+                <element signature="e#4206#4325#0" expanded="false" />
+                <element signature="e#4327#5208#0" expanded="false" />
+                <element signature="e#5209#5389#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -72,19 +76,21 @@
       <file leaf-file-name="hiddenMessage.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hiddenMessage.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
+            <state relative-caret-position="180">
               <caret line="13" column="30" lean-forward="false" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="unhide.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="unhide.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/unhide.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="46" column="44" lean-forward="false" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
-              <folding />
+            <state relative-caret-position="245">
+              <caret line="105" column="55" lean-forward="false" selection-start-line="105" selection-start-column="55" selection-end-line="105" selection-end-column="55" />
+              <folding>
+                <element signature="e#84#463#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -92,7 +98,7 @@
       <file leaf-file-name="supportLib.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/supportLib.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
+            <state relative-caret-position="437">
               <caret line="98" column="34" lean-forward="false" selection-start-line="98" selection-start-column="34" selection-end-line="98" selection-end-column="34" />
               <folding />
             </state>
@@ -124,9 +130,9 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/hiddenMessage.h" />
         <option value="$PROJECT_DIR$/supportLib.c" />
-        <option value="$PROJECT_DIR$/unhide.c" />
-        <option value="$PROJECT_DIR$/hide.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/hide.c" />
+        <option value="$PROJECT_DIR$/unhide.c" />
       </list>
     </option>
   </component>
@@ -138,9 +144,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
-    <option name="y" value="52" />
-    <option name="width" value="1205" />
-    <option name="height" value="718" />
+    <option name="y" value="24" />
+    <option name="width" value="1215" />
+    <option name="height" value="776" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -178,6 +184,7 @@
     <property name="js.eslint.eslintPackage" value="" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/jack/CLionProjects/hiddenMessage/hiddenMessage.h" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -191,7 +198,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.unhide.c">
+  <component name="RunManager" selected="Application.hide.c">
     <configuration default="true" type="CLion_Remote" factoryName="GDB Remote Debug" remoteCommand="" symbolFile="" sysroot="">
       <method />
     </configuration>
@@ -408,11 +415,11 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="unhide.c" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="../meow-005.ppm" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hiddenMessage" TARGET_NAME="unhide.c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="hiddenMessage" RUN_TARGET_NAME="unhide.c">
+    <configuration default="false" name="unhide.c" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-m ../meow" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hiddenMessage" TARGET_NAME="unhide.c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="hiddenMessage" RUN_TARGET_NAME="unhide.c">
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="hide.c" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-m 6 ../kittens ../meow" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hiddenMessage" TARGET_NAME="hide.c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="hiddenMessage" RUN_TARGET_NAME="hide.c">
+    <configuration default="false" name="hide.c" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="../sample.ppm ../output" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hiddenMessage" TARGET_NAME="hide.c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="hiddenMessage" RUN_TARGET_NAME="hide.c">
       <envs />
       <method />
     </configuration>
@@ -452,7 +459,9 @@
       <workItem from="1493790533832" duration="5785000" />
       <workItem from="1493810881320" duration="19549000" />
       <workItem from="1493856322651" duration="7728000" />
-      <workItem from="1493873720369" duration="5852000" />
+      <workItem from="1493873720369" duration="12432000" />
+      <workItem from="1493894299374" duration="15000" />
+      <workItem from="1493894408251" duration="5206000" />
     </task>
     <task id="LOCAL-00001" summary="Moved all function from hiddenMessage.h to supportLib.c">
       <created>1493734727615</created>
@@ -461,19 +470,26 @@
       <option name="project" value="LOCAL" />
       <updated>1493734727615</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Implemented task 1 hide&#10;need to do unhide">
+      <created>1493881978987</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1493881978987</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="106790000" />
+    <option name="totallyTimeSpent" value="118591000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="52" width="1205" height="718" extended-state="0" />
+    <frame x="65" y="24" width="1215" height="776" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427386" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14156379" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3561431" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3266762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32659408" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290398" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -481,7 +497,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34059098" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33951497" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -502,7 +518,8 @@
     <MESSAGE value="Moved all function from hiddenMessage.h to supportLib.c" />
     <MESSAGE value="Fixed program didn't accept multi-line input&#10;Available space from -1 to -2 because of  \0 EOF&#10;Merge one function append into the supportLib.c" />
     <MESSAGE value="Implemented task 1 hide&#10;need to do unhide" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented task 1 hide&#10;need to do unhide" />
+    <MESSAGE value="Finished implement task 1&#10;TODO: Need to do code optimisation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished implement task 1&#10;TODO: Need to do code optimisation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -518,15 +535,70 @@
           <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>117</line>
+          <option name="timeStamp" value="192" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>147</line>
+          <option name="timeStamp" value="194" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>159</line>
+          <option name="timeStamp" value="195" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>183</line>
+          <option name="timeStamp" value="196" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>185</line>
+          <option name="timeStamp" value="197" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>211</line>
+          <option name="timeStamp" value="198" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>202</line>
+          <option name="timeStamp" value="199" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>207</line>
+          <option name="timeStamp" value="200" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/unhide.c</url>
+          <line>204</line>
+          <option name="timeStamp" value="201" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/hide.c</url>
-          <line>366</line>
-          <option name="timeStamp" value="169" />
+          <line>260</line>
+          <option name="timeStamp" value="207" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/hide.c</url>
+          <line>90</line>
+          <option name="timeStamp" value="208" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/hide.c</url>
+          <line>81</line>
+          <option name="timeStamp" value="209" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="186" />
+      <option name="time" value="210" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -569,6 +641,13 @@
           <caret line="34" column="20" lean-forward="false" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
           <folding>
             <element signature="e#49#75#0" expanded="true" />
+            <element signature="e#117#583#0" expanded="false" />
+            <element signature="e#585#1913#0" expanded="false" />
+            <element signature="e#2758#3369#0" expanded="false" />
+            <element signature="e#3370#4167#0" expanded="false" />
+            <element signature="e#4206#4325#0" expanded="false" />
+            <element signature="e#4327#5208#0" expanded="false" />
+            <element signature="e#5209#5389#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -587,6 +666,13 @@
           <caret line="129" column="34" lean-forward="false" selection-start-line="129" selection-start-column="34" selection-end-line="129" selection-end-column="34" />
           <folding>
             <element signature="e#49#75#0" expanded="true" />
+            <element signature="e#117#583#0" expanded="false" />
+            <element signature="e#585#1913#0" expanded="false" />
+            <element signature="e#2758#3369#0" expanded="false" />
+            <element signature="e#3370#4167#0" expanded="false" />
+            <element signature="e#4206#4325#0" expanded="false" />
+            <element signature="e#4327#5208#0" expanded="false" />
+            <element signature="e#5209#5389#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -622,6 +708,13 @@
           <caret line="149" column="10" lean-forward="false" selection-start-line="149" selection-start-column="10" selection-end-line="149" selection-end-column="10" />
           <folding>
             <element signature="e#49#75#0" expanded="true" />
+            <element signature="e#117#583#0" expanded="false" />
+            <element signature="e#585#1913#0" expanded="false" />
+            <element signature="e#2758#3369#0" expanded="false" />
+            <element signature="e#3370#4167#0" expanded="false" />
+            <element signature="e#4206#4325#0" expanded="false" />
+            <element signature="e#4327#5208#0" expanded="false" />
+            <element signature="e#5209#5389#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -739,19 +832,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/supportLib.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="98" column="34" lean-forward="false" selection-start-line="98" selection-start-column="34" selection-end-line="98" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -763,28 +847,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hiddenMessage.h">
+    <entry file="file://$PROJECT_DIR$/supportLib.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="13" column="30" lean-forward="false" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
+        <state relative-caret-position="437">
+          <caret line="98" column="34" lean-forward="false" selection-start-line="98" selection-start-column="34" selection-end-line="98" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/unhide.c">
+    <entry file="file://$PROJECT_DIR$/hiddenMessage.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="46" column="44" lean-forward="false" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
+        <state relative-caret-position="180">
+          <caret line="13" column="30" lean-forward="false" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hide.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="94" column="68" lean-forward="false" selection-start-line="94" selection-start-column="68" selection-end-line="94" selection-end-column="68" />
+        <state relative-caret-position="810">
+          <caret line="90" column="22" lean-forward="false" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
           <folding>
             <element signature="e#49#75#0" expanded="true" />
+            <element signature="e#117#583#0" expanded="false" />
+            <element signature="e#585#1913#0" expanded="false" />
+            <element signature="e#2758#3369#0" expanded="false" />
+            <element signature="e#3370#4167#0" expanded="false" />
+            <element signature="e#4206#4325#0" expanded="false" />
+            <element signature="e#4327#5208#0" expanded="false" />
+            <element signature="e#5209#5389#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/unhide.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="105" column="55" lean-forward="false" selection-start-line="105" selection-start-column="55" selection-end-line="105" selection-end-column="55" />
+          <folding>
+            <element signature="e#84#463#0" expanded="false" />
           </folding>
         </state>
       </provider>
