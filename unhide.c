@@ -5,6 +5,10 @@
 #include "hiddenMessage.h"
 
 int inputValidation(int argc, char *argv[]){
+    if (argc < 2){
+        fprintf(stderr, "See -help for more info'\n");
+        exit(-1);
+    }
     if (argc == 2){
         return 0;
     }else if (strcmp(argv[1],"-m")==0){
@@ -161,7 +165,7 @@ int main(int argc, char *argv[]) {
 
             //file doesnt exist
             if (inputFile == NULL) {
-                fprintf(stderr, "%s:error:Cannot open %s \n", argv[0], argv[1]);
+                fprintf(stderr, "%s:error:Cannot decode series of ppm file \n", argv[0]);
                 perror(0);
                 free(message);
                 exit(-1);

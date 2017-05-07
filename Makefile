@@ -1,8 +1,10 @@
+CFLAGS=-I/usr/include/SDL2
+LDFLAGS=-lSDL2 -lSDL_image
 all:
 	gcc hide.c supportLib.c -lm -o hide
 	gcc unhide.c supportLib.c -lm -o unhide
 debug:
-	gcc -g hide.c supportLib.c -lm -o hide
+	gcc -g hide.c supportLib.c -lm -o hide $(CFLAGS) $(LDFLAGS)
 	gcc -g unhide.c supportLib.c -lm -o unhide
 clean:
 	rm hide
