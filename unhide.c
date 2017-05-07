@@ -10,14 +10,18 @@ int inputValidation(int argc, char *argv[]){
         exit(-1);
     }
     if (argc == 2){
+        if (strcmp(argv[1], "-help") == 0) {
+            printf("N./unhide inputfile\n -m Usage: hide -m file'\n");
+            exit(0);
+        }
         return 0;
     }else if (strcmp(argv[1],"-m")==0){
         if (argc == 3){
             return 1;
         }
-        fprintf(stderr, "-m Usage: hide -m number-of-files basename output-base-name'\n");
+        fprintf(stderr, "-m Usage: hide -m file'\n");
         exit(-1);
-    }else{
+    } else {
         fprintf(stderr, "See -help for more info'\n");
         exit(-1);
     }
@@ -74,7 +78,14 @@ char *revealMessage(FILE *in, int width, int height) {
     }
 }
 
-
+/**
+ * reveals the message inside of the image continuously
+ * @param in  input ppm file
+ * @param message the decoded message
+ * @param maxMessage the maximum message that message can take
+ * @param previousMessageBits unfinished message bits
+ * @return status 0 means decode finished, 1 means it has not finished
+ */
 
 int revealMessageM(FILE *in, char* message, int maxMessage ,char* previousMessageBits) {
     int aChar;
@@ -140,7 +151,6 @@ int main(int argc, char *argv[]) {
         skipComment(inputFile);
         checkColorChannel(inputFile);
 
-        fseek(inputFile, -1, SEEK_CUR);
 
         char *message = revealMessage(inputFile, dimension[0], dimension[1]);
 
@@ -149,8 +159,9 @@ int main(int argc, char *argv[]) {
 
         fclose(inputFile);
     }else if (mode == 1){
+
         int i = 0;
-        char *message = malloc(sizeof(char) * 2);
+        char *message = malloc(sizeof(char) * 2);//Just malloc only 2 bytes, we can always reallocate after
         message[0] = '\0';
         char previousMessageBits[8];
         previousMessageBits[0] = '\0';
@@ -185,7 +196,8 @@ int main(int argc, char *argv[]) {
                 exit(-1);
             }
 
-            maxMessage += (int) floor((dimension[0] * dimension[1] * 3) / 8 + (dimension[0] * dimension[1] * 3) % 8);
+            maxMessage += (int) floor((dimension[0] * dimension[1] * 3) / 8 + (dimension[0] * dimension[1] * 3) %
+                                                                              8);//calculate the message realloc if necessary
             message = realloc(message,(size_t)maxMessage+1);
             if (message == NULL){
                 fprintf(stderr, "Memory Error: Cannot allocate memory space\n");
@@ -202,9 +214,9 @@ int main(int argc, char *argv[]) {
                 exit(-1);
             }
 
-            fseek(inputFile, -1, SEEK_CUR);
 
-            if (revealMessageM(inputFile,message,maxMessage,previousMessageBits) == 0){
+            if (revealMessageM(inputFile, message, maxMessage, previousMessageBits) ==
+                0) {//If the message has not hit the eof, then keep on going using the previous message bits
                 fclose(inputFile);
                 break;
             }

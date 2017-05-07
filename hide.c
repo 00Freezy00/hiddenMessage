@@ -1,6 +1,7 @@
 //
 //Created by Jack 26956047
 //Hide the message
+//Updated to Assignment 2
 #include "hiddenMessage.h"
 #include <stdbool.h>
 #include <ctype.h>
@@ -75,44 +76,21 @@ char *checkMessageSize(FILE *in, int width, int height) {
  * @param out: a file pointer, output file
  * @param in: a file pointer, input file
  * @param hiddenMessageBin: hidden message in binary form
- * @return the size of the image binary data
+ * @return Amount of bytes have been read
  */
-int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin) {
-    //Assuming input validation has passed
-    int aChar;
-    for (int i = 0; i < strlen(hiddenMessageBin); i = i + 1) {
-        aChar = fgetc(in);
-        if (feof(in)) {
-            return i;
-        }
-        aChar = hideABit(aChar, hiddenMessageBin[i]);
-        fwrite(&aChar, 1, sizeof(unsigned char), out);
-    }
-    int i = (int) strlen(hiddenMessageBin) - 1;
-    while (1) {
-        aChar = fgetc(in);
-        if (feof(in)) {
-            return i + 1;
-        }
-        i = i + 1;
-        fwrite(&aChar, 1, sizeof(unsigned char), out);
-    }
-}
-
-int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin, int offset) {
+int hideTheMessage(FILE *out, FILE *in, char *hiddenMessageBin, int offset) {
     //Assuming input validation has passed
     int aChar;
     while (offset < strlen(hiddenMessageBin)) {
         aChar = fgetc(in);
         if (feof(in)) {
-            return offset;
+            return offset; //When the input file is finished, but message hasn't finish yet
         }
-        aChar = hideABit(aChar, hiddenMessageBin[offset]);
-        fwrite(&aChar, 1, sizeof(unsigned char), out);
+        aChar = hideABit(aChar, hiddenMessageBin[offset]);//Hide one bit into a byte
+        fwrite(&aChar, 1, sizeof(unsigned char), out);//Write one byte into the output file
         ++offset;
     }
-
-    while (1) {//If the hiddenMessageBin has embed
+    while (1) { //When the message has finished encoding, but there are still some spaces left
         aChar = fgetc(in);
         if (feof(in)) {
             return offset;
@@ -120,7 +98,6 @@ int hideTheMessageM(FILE *out, FILE *in, char *hiddenMessageBin, int offset) {
         fwrite(&aChar, 1, sizeof(unsigned char), out);
     }
 }
-
 /**
  * Turn input string into binary format
  * @param aString: input string
@@ -149,32 +126,32 @@ char *stringToBinary(char *aString) {
     return binary;
 }
 /**
- *
+ * Check to see if there are only numbers in the string
  * @param s
  * @return
  */
-bool numbers_only(const char *s) {
+bool numbersOnly(const char *s) {
     while (*s) {
         if (isdigit(*s++) == 0) return false;
     }
-
     return true;
 }
 
 /**
- *
+ * Validate the input and give out which mode the software is going to run
  * @param argc
  * @param argv
- * @return mode 0 normal 1 multiple file 2 parallel 3 before-after
+ * @return mode 0 normal 1 multiple file 2 parallel 3 before-after image comparision
  */
 int inputValidation(int argc, char *argv[]) {
-    if (argc < 2) {
+
+    if (argc < 2) {//Basic checking, the message should not be less then 2 arguments
         fprintf(stderr, "See -help for more info'\n");
         exit(-1);
     }
     if (strcmp(argv[1], "-m") == 0) {
         if (argc == 5) {
-            if (numbers_only(argv[2]) == true && atoi(argv[2]) > 0 &&
+            if (numbersOnly(argv[2]) == true && atoi(argv[2]) > 0 &&
                 atoi(argv[2]) <= 255) {//number-of-files should be in the range of (0,255]
                 return 1;
             }
@@ -193,16 +170,16 @@ int inputValidation(int argc, char *argv[]) {
         }
         fprintf(stderr, "-s Usage: hide -s inputFile outputFile\n");
         exit(-1);
-    }
-
-    if (argc == 3) {
+    } else if (strcmp(argv[1], "-help") == 0) {
+        printf("No flag ./hide inputFile outputFile\n-m Usage: hide -m number-of-files basename output-base-name\n-p Usage: hide -p file\n-s Usage: hide -s inputFile outputFile\n");
+        exit(0);
+    } else if (argc == 3) {
         return 0;
     } else {
         fprintf(stderr, "See -help for more info\n");
         exit(-1);
     }
 }
-
 /**
  *
  * @param file
@@ -213,22 +190,26 @@ void closePreviousFile(FILE **file, int index) {
         fclose(file[i]);
     }
 }
+
 /**
- *
+ * Visualise ppm file to the SDL surface
  * @param surface is the current surface we are working on
- * @param x pos on the surface initailly should be 0
- * @param y pos on the surface initially should be 0
+ * @param x pos on the surface initially should be 0
+ * @param y pos on the surface initially should be 0 and always be 0, this variable here is for future extension
  * @param image a PPM file assuming it reaches reading binary data position
- * @param maxCapacity of the image width times height
+ * @param w end pos on the surface
+ * @param h end pos on the surface
+ * Assume the hide function work correctly, It doesn't need to check the file
  */
 int ppmToSurface(SDL_Surface *surface,int x, int y,FILE* image,int w, int h){
-    int rgb[3];
-    for (int i = 0; i < h;++i){//looping through ppm
+    int rgb[3]; //Array to store the R G B
+    for (int i = y; i < h; ++i) {//looping through ppm
         for (int j = x; j < w; ++j){
             rgb[0] = fgetc(image);
             rgb[1] = fgetc(image);
             rgb[2] = fgetc(image);
-            int *p = (int *)((char*)surface->pixels + i * surface ->pitch + j * surface -> format ->BytesPerPixel);
+            int *p = (int *) ((char *) surface->pixels + i * surface->pitch +
+                              j * surface->format->BytesPerPixel);//Find the pixel
             *p=SDL_MapRGB(surface->format, rgb[0], rgb[1], rgb[2]);//set it to the color
         }
     }
@@ -256,6 +237,7 @@ int normalMode(char *executePath, char *inputFileName, char *outputFileName) {
     if (dimension[3] == 1) {
         exit(-1);
     }
+
     char *hiddenMessage = checkMessageSize(inputFile, dimension[0], dimension[1]);
     char *hiddenMessageBin = stringToBinary(hiddenMessage);
     free(hiddenMessage);
@@ -283,11 +265,11 @@ int normalMode(char *executePath, char *inputFileName, char *outputFileName) {
 
     //Writing header info to the output file
     char headerInfo[fileBinaryPos];
-    fread(headerInfo, (size_t) fileBinaryPos - 1, sizeof(char), inputFile);
-    fwrite(headerInfo, (size_t) fileBinaryPos - 1, sizeof(char), outputFile);
+    fread(headerInfo, (size_t) fileBinaryPos, sizeof(char), inputFile);
+    fwrite(headerInfo, (size_t) fileBinaryPos, sizeof(char), outputFile);
 
     //write image binary to the output file and checks if the image's binary is matching up with the header
-    if (dimension[0] * dimension[1] * 3 != hideTheMessage(outputFile, inputFile, hiddenMessageBin)) {
+    if (dimension[0] * dimension[1] * 3 != hideTheMessage(outputFile, inputFile, hiddenMessageBin, 0)) {
         fprintf(stderr, "Error: image's binary data is not matching up with the header\n");
         free(hiddenMessageBin);
         fclose(inputFile);
@@ -305,13 +287,14 @@ int normalMode(char *executePath, char *inputFileName, char *outputFileName) {
     return 0;
 }
 
-int MMode(int argc, char *argv[]) {
+int MMode(char *argv[]) {
     int numberOfFiles = atoi(argv[2]);
     FILE *inputFile[atoi(argv[2]) - 1];
     long fileBinaryPos[atoi(argv[2]) - 1];
 
     char targetFileName[
             strlen(argv[3]) + 9];//Size should be length of the basename + 4 (-000) + 4 (.ppm) + 1 for the \0
+
     for (int i = 0; i < numberOfFiles; ++i) {
         snprintf(targetFileName, strlen(argv[3]) + 9, "%s-%03d.%s", argv[3], i,
                  "ppm");//Format string to basename-xxx.ppm
@@ -352,7 +335,7 @@ int MMode(int argc, char *argv[]) {
         }
     }//Images header seems fine
 
-    char *hiddenMessage = malloc(sizeof(char) * maxMessage);
+    char *hiddenMessage = malloc(sizeof(char) * maxMessage + 1);//+1 for \0
     if (hiddenMessage == NULL) {
         fprintf(stderr, "Memory Error: Cannot allocate memory space\n");
         closePreviousFile(inputFile, numberOfFiles);
@@ -365,7 +348,8 @@ int MMode(int argc, char *argv[]) {
     int aChar = 0;
     while (aChar != EOF) {
         aChar = fgetc(stdin);
-        if (append(hiddenMessage, (size_t) maxMessage, (char) aChar) != 0) {
+        if (append(hiddenMessage, (size_t) maxMessage, (char) aChar) !=
+            0) {//Return 1 means maxMessage cannot take in chars anymore
             fprintf(stderr, "Input error: The message is too large for this image\n");
             closePreviousFile(inputFile, numberOfFiles);
             free(hiddenMessage);
@@ -389,10 +373,10 @@ int MMode(int argc, char *argv[]) {
     }
     free(hiddenMessage);
 
-
+    //Prepare writing to output file
     FILE *outputFile[atoi(argv[2]) - 1];
     char outputFileNameList[atoi(argv[2]) - 1][strlen(argv[4]) + 9];
-    int startPoint = 0;
+    int offset = 0;
 
     for (int i = 0; i < numberOfFiles; ++i) {
 
@@ -400,9 +384,9 @@ int MMode(int argc, char *argv[]) {
         //record offset, prepare to write out the header
         fileBinaryPos[i] = ftell(inputFile[i]);
         //=======================
-        rewind(inputFile[i]);
+        rewind(inputFile[i]);//reset the file header to the start
         //read in output
-        outputFileNameList[i][0] = '\0';
+        outputFileNameList[i][0] = '\0';//Every String should have \0, I don't know if it is needed
         snprintf(outputFileNameList[i], strlen(argv[4]) + 9, "%s-%03d.%s", argv[4], i,
                  "ppm");//Format string to basename-xxx.ppm
         outputFile[i] = fopen(outputFileNameList[i], "w");
@@ -410,30 +394,33 @@ int MMode(int argc, char *argv[]) {
         if (outputFile[i] == NULL) {
             fprintf(stderr, "%s:error:Cannot write %s \n", argv[0], outputFileNameList[i]);
             closePreviousFile(inputFile, numberOfFiles);
-            closePreviousFile(outputFile, i);
+            closePreviousFile(outputFile, i);// Close to i, because not all file have been opened
+            free(hiddenMessageBin);
             perror(0);
             exit(-1);
         }
 
         //Writing header info to the output file
-        char *headerInfo = malloc(sizeof(char) * fileBinaryPos[i]);
+        char *headerInfo = malloc(sizeof(char) * fileBinaryPos[i]);//Each file has different file binary position
         headerInfo[0] = '\0';
-        fread(headerInfo, (size_t) fileBinaryPos[i] - 1, sizeof(char), inputFile[i]);
-        fwrite(headerInfo, (size_t) fileBinaryPos[i] - 1, sizeof(char), outputFile[i]);
+        fread(headerInfo, (size_t) fileBinaryPos[i], sizeof(char), inputFile[i]);
+        fwrite(headerInfo, (size_t) fileBinaryPos[i], sizeof(char), outputFile[i]);
         free(headerInfo);
 
         //write image binary to the output file and checks if the image's binary is matching up with the header
-        startPoint = hideTheMessageM(outputFile[i], inputFile[i], hiddenMessageBin, startPoint);
-        if (startPoint == strlen(hiddenMessageBin)) {
+        offset = hideTheMessage(outputFile[i], inputFile[i], hiddenMessageBin, offset);
+        fclose(outputFile[i]);
+        if (offset ==
+            strlen(hiddenMessageBin)) {//if the offset is not equal to hiddenMessageBin, clearly some image binary data is not matching up with the header
             break;
         }
-        fclose(outputFile[i]);
 
     }
-    if (startPoint != strlen(hiddenMessageBin)) {
-        fprintf(stderr, "Error: image's binary data is not matching up with the header\n");
+    if (offset != strlen(hiddenMessageBin)) {
+        fprintf(stderr, "Error: images' binary data is not matching up with the header\n");
         free(hiddenMessageBin);
         closePreviousFile(inputFile, numberOfFiles);
+
         for (int i = 0; i < numberOfFiles; ++i) {
             remove(outputFileNameList[i]);//Remove the output file
         }
@@ -444,14 +431,16 @@ int MMode(int argc, char *argv[]) {
     return 0;
 }
 
-int PMode(int argc, char *argv[]) {
+int PMode(char *argv[]) {
     pid_t pid;
+    //Should have done it in fgetc, that way I can realloc if the string is too large for the current message, but No enough time to implement this
     char inputStringFile[128];
     char inputImageName[128];
     char outputImageName[128];
     inputStringFile[0] = '\0';
     inputImageName[0] = '\0';
     inputImageName[0] = '\0';
+
     FILE *inputFile;
     inputFile = fopen(argv[2], "r");
     //file doesnt exist
@@ -461,7 +450,8 @@ int PMode(int argc, char *argv[]) {
         exit(-1);
     }
 
-    while ((fscanf(inputFile, "%128s %128s %128s\n", inputStringFile, inputImageName, outputImageName)) == 3) {
+    while ((fscanf(inputFile, "%128s %128s %128s\n", inputStringFile, inputImageName, outputImageName)) ==
+           3) {//If the fscanf doesnt return 3 assignments then it is either hitted the EOF or the file format is wrong
         FILE *inputString;
         inputString = fopen(inputStringFile, "r");
         if (inputString == NULL) {
@@ -470,10 +460,11 @@ int PMode(int argc, char *argv[]) {
             fclose(inputFile);
             exit(-1);
         }
-        dup2(fileno(inputString), STDIN_FILENO);
+
+        dup2(fileno(inputString), STDIN_FILENO);//Spit the file stream into stdin
         fclose(inputString);
         if ((pid = fork()) == 0) {
-            fclose(inputFile);
+            fclose(inputFile);//Need to close the input file on each process, because when fork it dups the file pointer as well
             normalMode(argv[0], inputImageName, outputImageName);
             exit(0);
         } else if (pid == -1) {
@@ -484,7 +475,7 @@ int PMode(int argc, char *argv[]) {
     }
     if (feof(inputFile)) {
         fclose(inputFile);
-        while (wait(NULL) > 0);
+        while (wait(NULL) > 0);//Wait until all of the children finishes
         return 0;
     } else {
         fprintf(stderr, "Error: file format invalid");
@@ -495,9 +486,10 @@ int PMode(int argc, char *argv[]) {
 
 }
 
-int SMode(int argc, char *argv[]){
-    //if (normalMode(argv[0], argv[2] , argv[3]) == 0){
+int SMode(char *argv[]) {
+    if (normalMode(argv[0], argv[2], argv[3]) == 0) { //Let the normal mode processes it first
         FILE* originalImage;
+        //Input validation again, It's not that efficient
         originalImage = fopen(argv[2],"r");
         if (originalImage == NULL){
             fprintf(stderr, "%s:error:Cannot open %s \n", argv[0], argv[2]);
@@ -519,7 +511,7 @@ int SMode(int argc, char *argv[]){
 
         //Dimension of the window, these 2 values cannot be changed
         int SCREEN_WIDTH = originalDimension[0]*2 + 5; //5 pixel to separate 2 image
-        if (SCREEN_WIDTH < 50){
+        if (SCREEN_WIDTH < 50) { // If the window is too small, you might not be able to hit close
             SCREEN_WIDTH = 50;
         }
         int SCREEN_HEIGHT = originalDimension[1] + 30;
@@ -549,7 +541,7 @@ int SMode(int argc, char *argv[]){
             fprintf(stderr, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
             exit(-1);
         }
-
+        //Getting window's surface
         screenSurface = SDL_GetWindowSurface(window);
 
         SDL_FillRect(screenSurface, NULL,
@@ -561,8 +553,10 @@ int SMode(int argc, char *argv[]){
             exit(-1);
         }
 
+
         int x = 0;
         int y = 0;
+        //Starts from 0,0 draw the picture
         if (ppmToSurface(screenSurface,x,y,originalImage,originalDimension[0],originalDimension[1]) == 1){
             fclose(originalImage);
             fprintf(stderr,"Binary data is not matching the header");
@@ -572,23 +566,24 @@ int SMode(int argc, char *argv[]){
 
         SDL_Rect drawSquare;
 
-        drawSquare.x = originalDimension[0];
+        drawSquare.x = originalDimension[0];//Start pic from the end of first picture
         drawSquare.y = 0;
         drawSquare.w = 5;
         drawSquare.h = originalDimension[1];
 
-        SDL_FillRect(screenSurface, &drawSquare,SDL_MapRGB(screenSurface->format, 0, 0, 0));
+        SDL_FillRect(screenSurface, &drawSquare,
+                     SDL_MapRGB(screenSurface->format, 0, 0, 0));//Draw a black rectangle to separate the image
 
-        SDL_UpdateWindowSurface(window);
-
+        //Open the processed Image
         FILE* processedImage;
         processedImage = fopen(argv[3],"r");
         if (processedImage == NULL){
-            fprintf(stderr, "%s:error:Cannot open %s \n", argv[0], argv[2]);
+            fprintf(stderr, "%s:error:Cannot open %s \n", argv[0], argv[3]);
             perror(0);
             exit(-1);
         }
 
+        //Header validation
         skipComment(processedImage);
         if (checkImageFormat(processedImage) == 1) {
             fclose(processedImage);
@@ -607,16 +602,20 @@ int SMode(int argc, char *argv[]){
             exit(-1);
         }
 
+        //get the offset of x
         x = x + drawSquare.x + 5;
         y = 0;
-        if (ppmToSurface(screenSurface,x,y,processedImage,processedDimension[0]*2 + 5,processedDimension[1]) == 1){
+        if (ppmToSurface(screenSurface, x, y, processedImage, processedDimension[0] * 2 + 5, processedDimension[1]) ==
+            1) {//Map the second image
             fclose(processedImage);
             fprintf(stderr,"Binary data is not matching the header");
             exit(-1);
         }
         fclose(processedImage);
 
+        //Show the window
         SDL_UpdateWindowSurface(window);
+
 
         SDL_Event event;
         bool windowRunning = true;
@@ -624,16 +623,17 @@ int SMode(int argc, char *argv[]){
         {
             if (SDL_PollEvent(&event))
             {
-                if (event.type == SDL_QUIT)
+                if (event.type == SDL_QUIT)//Quit if the user click on close
                 {
                     windowRunning = false;
                 }
             }
         }
-        SDL_DestroyWindow(window);
-        SDL_Quit();
+        SDL_DestroyWindow(window);//Destroy window
+        SDL_Quit();//Close it
+        //Not sure if you need to destroy the surface
         return 0;
-    //};
+    };
     return 0;
 }
 
@@ -650,11 +650,11 @@ int main(int argc, char *argv[]) {
     if (mode == 0) {
         return normalMode(argv[0], argv[1], argv[2]);
     } else if (mode == 1) {
-        return MMode(argc, argv);
+        return MMode(argv);
     } else if (mode == 2) {
-        return PMode(argc, argv);
+        return PMode(argv);
     } else if (mode == 3){
-        return SMode(argc, argv);
+        return SMode(argv);
     }
 }
 
